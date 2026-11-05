@@ -15,6 +15,9 @@ const eslintConfig = defineConfig([
     ".cache/**",
     "test-results/**",
     "playwright-report/**",
+    // Vendored scrollcraft engine, kept byte-identical to the skill's copy.
+    "src/vendor/**",
+    "scrollcraft/**",
   ]),
 ]);
 

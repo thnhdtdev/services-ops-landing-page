@@ -1,58 +1,60 @@
-# services-ops · Laundry management landing page
+# ServiceOps · landing page
 
-A Vietnamese product website built with Next.js 16 App Router, React 19, strict TypeScript, and Tailwind CSS 4. The page uses server components with small client components for navigation, the illustrative product preview, and order dialogs.
+Landing page tiếng Việt cho ServiceOps, phần mềm quản lý tiệm giặt sấy và tiệm vệ sinh giày. Next.js 16 App Router, React 19, TypeScript strict, CSS thuần. Chuyển động cuộn dùng engine scrollcraft (vanilla JS) đặt trong `src/vendor/`.
 
-## Run locally
+## Chạy
 
 ```bash
 npm install
-npm run dev
+npm run dev            # http://localhost:3000
 ```
 
-Open `http://localhost:3000`.
+## Cấu hình
 
-## Product configuration
+Chép `.env.example` thành `.env.local`. Biến `NEXT_PUBLIC_*` được đóng vào lúc build, đổi xong phải build lại.
 
-Copy `.env.example` to `.env.local` and set the values that are available. Public variables are compiled into the site at build time; rebuild after changing them.
+| Biến | Dùng cho |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Địa chỉ public; bật canonical, OG URL và cho phép index |
+| `NEXT_PUBLIC_ZALO_URL` | Nút **Nhắn Zalo**, ví dụ `https://zalo.me/0xxxxxxxxx` |
+| `NEXT_PUBLIC_TRIAL_URL` | Nút **Đăng ký dùng thử** (Google Form...). Để trống thì nút này dùng link Zalo |
 
-| Variable                    | Purpose                                                                        |
-| --------------------------- | ------------------------------------------------------------------------------ |
-| `NEXT_PUBLIC_PRODUCT_NAME`  | Product name, defaults to `services-ops`                                       |
-| `NEXT_PUBLIC_SITE_URL`      | Absolute public origin, used for canonical and social URLs; enables indexing   |
-| `NEXT_PUBLIC_ADMIN_URL`     | Absolute URL of the separate admin app; enables login and product-access links |
-| `NEXT_PUBLIC_CONTACT_EMAIL` | Real contact inbox; enables email links                                        |
+Khi chưa có link nào, hai nút vẫn hiện, chép sẵn nội dung phiếu và ghi rõ "Số Zalo và link đăng ký đang được cập nhật". Trang không dẫn tới link giả và không có backend. Zalo không nhận tin nhắn soạn sẵn qua link, nên phiếu chép tin nhắn vào clipboard để chủ tiệm dán.
 
-There is no invented contact address, registration flow, or backend. Without an admin URL, the closing action opens a sample order. Without a contact inbox, contact links are omitted. Local builds use localhost for social metadata and remain unindexed until a public URL is configured.
+## Cấu trúc trang
 
-**Replaceable content:** All product previews are labeled illustrations with sample data, not screenshots of the existing admin application. Replace these with the real product UI or screenshots when available. The preview is a presentation and does not read or change real store data.
-
-## Structure
+Ngữ pháp "split stage": một nửa là cách cũ (nền vở ô ly), một nửa là ServiceOps. Trên điện thoại chia trên/dưới, từ 860px chia trái/phải.
 
 ```text
 src/
-  app/                    Page composition, global styles, metadata, icons
-  assets/fonts/           Self-hosted Be Vietnam Pro fonts and OFL license
+  app/
+    page.tsx              SplitStage + Close + StageController
+    globals.css           theme và toàn bộ style của trang
+    scrollcraft.css       floor của engine, chép nguyên, không sửa
+    opengraph-image.tsx   ảnh chia sẻ Zalo/Facebook
   components/
-    layout/               Reusable header and footer
-    sections/             Hero, benefits, features, workflow, pricing, closing CTA
-    product/              Interactive product preview and order presentation
-    ui/                   Buttons, brand, icons, status badge
-  data/                   Site copy, navigation, configuration, sample records
-  lib/                    Currency, order totals, URL validation
-  types/                  Shared product types
-tests/                    Browser interaction, responsive, and accessibility checks
-public/images/            Local, optimized imagery
+    split-stage.tsx       act ghim: hero, 4 chuyện đau đầu, khoảng lặng, cú xé
+    stage-controller.tsx  mount engine + đường chia, gạch xoá, cú xé
+    close.tsx             bảng giá dịch vụ, hồ sơ khách, sắp ra mắt, giá, phiếu
+    ticket.tsx            phiếu đăng ký (client), soạn tin nhắn từ lựa chọn
+    phieu.tsx             tờ phiếu giặt, vật thể hình ảnh chính của trang
+  data/
+    site.ts               tên, link, nhãn CTA, 4 chuyện đau đầu
+    beats.ts              cửa sổ thời gian của từng nhịp trong act ghim
+  assets/brand/           logo
+  vendor/scrollcraft.js   engine, chép nguyên, không sửa
+scrollcraft/              BRIEF và registry của skill scroll-craft
 ```
 
-`src/app/page.tsx` only composes the sections. Reorder or remove sections there. Edit marketing copy in `src/data/site.ts` and sample records in `src/data/product.ts`. Edit the two planned packages and their pending prices in `src/data/pricing.ts`. Add future FAQ, product updates, or contact sections as independent section components. Add future pages with App Router folders and reuse the existing header/footer.
+Đổi nhịp cuộn thì sửa `src/data/beats.ts`; markup và controller cùng đọc file này nên không bao giờ lệch nhau.
 
-## Design and accessibility
+## Ảnh
 
-The design uses one light theme, the supplied logo's electric-blue and navy palette, self-hosted Vietnamese typography, restrained CSS motion, and a consistent radius scale. Marketing content and the interactive preview adapt separately for mobile. Buttons, links, disclosure controls, and dialogs have keyboard support; reduced motion is respected. No animation or state management library is required.
+Ảnh chụp và video quay app (`src/assets/img/`) chỉ để hiểu sản phẩm, **không bao giờ đưa lên trang** (xem `CLAUDE.md`). Video gốc (`*.mov`) nằm trong `.gitignore`. Hình ảnh trên trang là tờ phiếu giặt dựng bằng markup thật (`phieu.tsx`, mép răng cưa như logo) và logo trong `src/assets/brand/`. Ảnh gốc của app đã chuyển ra ngoài repo.
 
-The supplied `public/images/logo.png` is used in the header, footer, product preview, CTA, favicon, and social image. Phosphor supplies the interface icons. Font files are stored locally so production builds do not depend on Google Fonts requests. The Open Graph image is generated at build time with the same local font and product identity.
+Font Be Vietnam Pro tự host qua `next/font/google` (chỉ tải phần tiếng Việt và Latin). Hai file TTF trong `src/assets/fonts/` chỉ dùng cho ảnh OG.
 
-## Verification
+## Kiểm tra
 
 ```bash
 npm run lint
@@ -62,13 +64,4 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The browser suite runs against the production build on port 3100. It covers page metadata, local image loading, section links, preview tabs, search and status filters, empty-state recovery, customer balances, order-dialog focus and dismissal, mobile navigation, workflow disclosures, overflow at 320/390/768/1024/1440px, and automated WCAG AA checks. Browser checks emulate mobile Chromium; they do not replace device or screen-reader testing.
-
-## Image asset
-
-`public/images/laundry-studio.webp` is the final 1448 × 1086 supporting image (approximately 125 KB), generated with the built-in image tool and locally encoded as WebP. Its role is an illustrative shop photograph, not customer evidence.
-
-Generation prompt:
-
-> Use case: photorealistic-natural. Asset type: supporting photograph for a refined Vietnamese laundry management SaaS landing page. Create one editorial interior photograph of a small, beautiful, believable neighborhood laundry shop in daylight. Foreground: a neat stack of fluffy white towels with one pale sage green towel on a clean light-oak folding counter, a simple cream cotton laundry basket next to it. Background: two white front-loading washing machines, quiet pale sage tiled wall, a small sunlit window with soft shadows. Frame as an intimate architectural still life, 4:3 landscape composition, camera at counter height, towels in left foreground and washing machines in right midground. Warm natural daylight, realistic material texture, gentle film grain, restrained whites, pale sage green, natural oak. The room should feel useful and welcoming, uncluttered, not a luxury bathroom. No people, no text, no logos, no overlays, no watermarks. High-quality natural photography, not 3D render.
-# services-ops-landing-page
+Bộ test chạy trên bản build production (cổng 3100), cả desktop lẫn mobile: metadata và font, không có nút "tạo tài khoản", act ghim đi hết tới màn kết, mọi ảnh tải được, phiếu soạn đúng tin nhắn, không tràn ngang từ 320px tới 1440px, và kiểm tra WCAG AA tự động. Test chạy trên Chromium giả lập, không thay được việc thử trên iPhone/Android thật trong trình duyệt của Zalo và Facebook.

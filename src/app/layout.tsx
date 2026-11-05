@@ -1,36 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { Be_Vietnam_Pro } from "next/font/google";
 import { site } from "@/data/site";
+import "./scrollcraft.css";
 import "./globals.css";
 
-const vietnam = localFont({
+// Self-hosted at build time and split by unicode-range, so a phone on 4G only
+// downloads the Vietnamese and Latin slices it needs.
+const vietnam = Be_Vietnam_Pro({
   variable: "--font-vietnam",
-  src: [
-    {
-      path: "../assets/fonts/BeVietnamPro-Regular.ttf",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/BeVietnamPro-Medium.ttf",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/BeVietnamPro-SemiBold.ttf",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../assets/fonts/BeVietnamPro-Bold.ttf",
-      weight: "700",
-      style: "normal",
-    },
-  ],
+  subsets: ["vietnamese", "latin"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
-const title = `${site.name} | Phần mềm quản lý tiệm giặt`;
+const title = `${site.name} | Phần mềm quản lý tiệm giặt sấy, vệ sinh giày`;
 
 export const metadata: Metadata = {
   title: { default: title, template: `%s | ${site.name}` },
@@ -55,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f8faff",
+  themeColor: "#ffffff",
   colorScheme: "light",
 };
 
@@ -65,8 +48,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="vi" className={`${vietnam.variable} antialiased`}>
-      <body>{children}</body>
+    <html lang="vi" className={vietnam.variable}>
+      <body>
+        {/* Without the engine every cue stays at opacity 0. Show the opening
+            screen and the closing sections, which carry the whole offer. */}
+        <noscript>
+          <style>{`.tiem{height:auto!important}.stage{position:relative!important}.beat--hero,.old__copy--hero,[data-sc-in],[data-sc-stagger]>*{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+        {children}
+      </body>
     </html>
   );
 }
