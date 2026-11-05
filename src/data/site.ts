@@ -1,117 +1,48 @@
-import { httpUrl } from "@/lib/format";
+import { httpUrl } from "@/lib/url";
 
-// Product identity and destinations can be changed in one place.
+// Destinations are configured per deployment. Leave a value empty and the
+// page says so instead of linking somewhere invented.
 export const site = {
-  name: process.env.NEXT_PUBLIC_PRODUCT_NAME?.trim() || "Services-Ops",
+  name: "ServiceOps",
   description:
-    "Phần mềm quản lý tiệm giặt: theo dõi đơn hàng, khách hàng, dịch vụ, thanh toán và công nợ trong một nơi.",
+    "Phần mềm quản lý cho tiệm giặt sấy và tiệm vệ sinh giày: đơn hàng, khách hàng, bảng giá, thanh toán và lịch làm nhân viên.",
   url: httpUrl(process.env.NEXT_PUBLIC_SITE_URL),
-  adminUrl: httpUrl(process.env.NEXT_PUBLIC_ADMIN_URL),
-  contactEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-    process.env.NEXT_PUBLIC_CONTACT_EMAIL || "",
-  )
-    ? process.env.NEXT_PUBLIC_CONTACT_EMAIL
-    : undefined,
+  zaloUrl: httpUrl(process.env.NEXT_PUBLIC_ZALO_URL),
+  trialUrl: httpUrl(process.env.NEXT_PUBLIC_TRIAL_URL),
 };
 
-export const navigation = [
-  { label: "Sản phẩm", href: "#san-pham" },
-  { label: "Tính năng", href: "#tinh-nang" },
-  { label: "Cách hoạt động", href: "#quy-trinh" },
-  { label: "Bảng giá", href: "#bang-gia" },
-];
-
-export const landing = {
-  hero: {
-    eyebrow: "PHẦN MỀM QUẢN LÝ TIỆM GIẶT",
-    title: ["Tiệm gọn gàng.", "Ngày nhẹ nhàng."],
-    description:
-      "Đơn hàng, khách hàng, thanh toán. Mọi việc trong tiệm, cùng một nơi dễ quản lý.",
-    primary: "Khám phá tính năng",
-    secondary: "Xem cách hoạt động",
-  },
-  benefits: [
-    {
-      icon: "orders",
-      title: "Rõ từng đơn hàng",
-      description: "Không còn tìm lại từng trang sổ.",
-    },
-    {
-      icon: "payment",
-      title: "Nắm từng khoản thu",
-      description: "Biết đã thanh toán, còn phải thu.",
-    },
-    {
-      icon: "overview",
-      title: "Hiểu hoạt động của tiệm",
-      description: "Có cái nhìn chung để sắp xếp việc.",
-    },
-  ],
-  features: {
-    title: "Bớt ghi chép. Thêm ngăn nắp.",
-    description:
-      "Những việc quen thuộc của tiệm giặt, được kết nối trong một hệ thống.",
-    orders: {
-      title: "Mỗi đơn hàng, rõ từng chi tiết.",
-      description:
-        "Dịch vụ, số lượng, ngày hẹn và trạng thái. Mọi thông tin cần thiết đều đi cùng đơn hàng.",
-    },
-    payments: {
-      title: "Tiền đã thu. Tiền cần nhớ.",
-      description:
-        "Tách bạch thanh toán và công nợ, để cuối ngày không phải cộng lại từ đầu.",
-    },
-    supporting: [
-      {
-        icon: "customers",
-        title: "Nhớ khách, không cần nhớ hết",
-        description:
-          "Lưu thông tin khách hàng và xem lại các đơn đã sử dụng dịch vụ.",
-      },
-      {
-        icon: "services",
-        title: "Dịch vụ theo cách tiệm làm",
-        description:
-          "Quản lý danh mục dịch vụ, đơn giá và các khoản giảm giá trên đơn.",
-      },
-      {
-        icon: "overview",
-        title: "Nhìn lại một ngày làm việc",
-        description:
-          "Theo dõi tổng quan đơn hàng, thanh toán và thống kê hoạt động.",
-      },
-    ],
-  },
-  workflow: {
-    title: ["Vẫn là việc mỗi ngày.", "Chỉ là gọn hơn."],
-    description:
-      "Từ lúc khách gửi đồ đến khi nhận lại, thông tin luôn liền mạch.",
-    steps: [
-      {
-        title: "Nhận đồ, ghi nhận đơn",
-        description:
-          "Chọn khách hàng, dịch vụ, số lượng và ngày hẹn trả. Thông tin được lưu ngay trên đơn.",
-      },
-      {
-        title: "Theo dõi trong quá trình giặt",
-        description:
-          "Xem trạng thái xử lý để biết đơn nào đang giặt, đơn nào đã sẵn sàng trả khách.",
-      },
-      {
-        title: "Trả đồ, ghi nhận thanh toán",
-        description:
-          "Kiểm tra chi tiết đơn và phiếu nhận. Ghi nhận số tiền khách thanh toán hoặc còn nợ.",
-      },
-      {
-        title: "Cuối ngày, xem lại tổng quan",
-        description:
-          "Mở bảng tổng quan để xem đơn hàng, khoản đã thu và công nợ của tiệm.",
-      },
-    ],
-  },
-  gettingStarted: {
-    title: "Để việc quản lý vào nếp.",
-    description:
-      "Bắt đầu từ một đơn hàng. Xem cách thông tin, dịch vụ và thanh toán được sắp xếp cùng nhau.",
-  },
+export const cta = {
+  trial: "Đăng ký dùng thử",
+  zalo: "Nhắn Zalo",
 };
+
+// The four things the page takes off the owner's mind, in scroll order.
+// The seam pips, the resolve line and the ticket's checklist all read this.
+export const pains = [
+  {
+    id: "don",
+    pip: "Đơn",
+    need: "Thất lạc đơn",
+    done: "Đơn nào cũng có mã và trạng thái",
+  },
+  {
+    id: "hen",
+    pip: "Hẹn trả",
+    need: "Quên hẹn trả đồ",
+    done: "Hẹn lấy nằm ngay trên đơn",
+  },
+  {
+    id: "tien",
+    pip: "Tiền",
+    need: "Không biết hôm nay thu bao nhiêu",
+    done: "Có thanh toán là báo về điện thoại",
+  },
+  {
+    id: "ca",
+    pip: "Ca làm",
+    need: "Xếp lịch nhân viên",
+    done: "Xếp ca không trùng giờ bận",
+  },
+] as const;
+
+export type PainId = (typeof pains)[number]["id"];

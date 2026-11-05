@@ -3,7 +3,8 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { site } from "@/data/site";
 
-export const alt = "Phần mềm quản lý tiệm giặt. Tiệm gọn gàng. Ngày nhẹ nhàng.";
+export const alt =
+  "ServiceOps, phần mềm quản lý tiệm giặt sấy và vệ sinh giày. Đơn, khách, tiền, ca làm: gọn trong một chỗ.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -56,7 +57,7 @@ export default async function OpenGraphImage() {
           letterSpacing: -3,
         }}
       >
-        Tiệm gọn gàng.
+        Đơn, khách, tiền, ca làm.
       </div>
       <div
         style={{
@@ -67,7 +68,7 @@ export default async function OpenGraphImage() {
           color: "#075ee5",
         }}
       >
-        Ngày nhẹ nhàng.
+        Gọn trong một chỗ.
       </div>
       <div
         style={{
@@ -77,7 +78,7 @@ export default async function OpenGraphImage() {
           marginTop: 38,
         }}
       >
-        Phần mềm quản lý dành cho tiệm giặt Việt.
+        Phần mềm quản lý cho tiệm giặt sấy và tiệm vệ sinh giày.
       </div>
     </div>,
     {
